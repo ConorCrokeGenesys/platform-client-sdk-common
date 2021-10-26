@@ -2,12 +2,14 @@ package cmd
 
 import (
 	"github.com/hashicorp/go-version"
+	"github.com/mypurecloud/platform-client-sdk-cli/build/gc/autopaginate"
 	"github.com/mypurecloud/platform-client-sdk-cli/build/gc/cmd/alternative_formats"
 	"github.com/mypurecloud/platform-client-sdk-cli/build/gc/config"
 	"github.com/mypurecloud/platform-client-sdk-cli/build/gc/logger"
 	"github.com/mypurecloud/platform-client-sdk-cli/build/gc/models"
 	"github.com/mypurecloud/platform-client-sdk-cli/build/gc/data_format"
 	"github.com/mypurecloud/platform-client-sdk-cli/build/gc/transform_data"
+    "github.com/mypurecloud/platform-client-sdk-cli/build/gc/utils"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
@@ -142,29 +144,30 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&config.ClientSecret, "clientsecret", "", "clientSecret override")
 	rootCmd.PersistentFlags().StringVar(&config.AccessToken, "accesstoken", "", "accessToken override")
 
-	if config.GetExperimentalFeature(getProfileName(os.Args), models.AlternativeFormats.String()) {
+	if config.GetExperimentalFeature(utils.GetProfileName(os.Args), models.AlternativeFormats.String()) {
 		rootCmd.PersistentFlags().StringVar(&data_format.InputFormat, "inputformat", "", "Data input format. Supported formats: YAML, JSON")
 		rootCmd.PersistentFlags().StringVar(&data_format.OutputFormat, "outputformat", "", "Data output format. Supported formats: YAML, JSON")
 
 		if data_format.OutputFormat == "" {
-			data_format.OutputFormat, _ = config.GetOutputFormat(getProfileName(os.Args))
+			data_format.OutputFormat, _ = config.GetOutputFormat(utils.GetProfileName(os.Args))
 		}
 		if data_format.InputFormat == "" {
-			data_format.InputFormat, _ = config.GetInputFormat(getProfileName(os.Args))
+			data_format.InputFormat, _ = config.GetInputFormat(utils.GetProfileName(os.Args))
 		}
 
 		rootCmd.AddCommand(alternative_formats.Cmdalternative_formats())
 	}
 
-	if config.GetExperimentalFeature(getProfileName(os.Args), models.TransformData.String()) {
+	if config.GetExperimentalFeature(utils.GetProfileName(os.Args), models.TransformData.String()) {
 		rootCmd.PersistentFlags().StringVar(&transform_data.TemplateFile, "transform", "", "Provide a Go template file for transforming output data")
 		rootCmd.PersistentFlags().StringVar(&transform_data.TemplateStr, "transformstr", "", "Provide a Go template string for transforming output data")
 	}
 
+    rootCmd.AddCommand(autopaginate.CmdAutopaginate())
 	rootCmd.AddCommand(versionCmd)
 	{{addCommands}}
 
-	if config.GetExperimentalFeature(getProfileName(os.Args), models.DummyCommand.String()) {
+	if config.GetExperimentalFeature(utils.GetProfileName(os.Args), models.DummyCommand.String()) {
 		rootCmd.AddCommand(dummy_command.Cmddummy_command())
 	}
 
@@ -182,20 +185,3 @@ func init() {
 	}
 }
 
-func getProfileName(args []string) string {
-	name := ""
-	for i, s := range args {
-		if (s == "-p" || s == "--profile") && i < len(args)-1 {
-			return args[i+1]
-		}
-		if strings.HasPrefix(s, "--profile=") {
-			name = strings.Replace(s, "--profile=", "", -1)
-		} else if strings.HasPrefix(s, "-p=") {
-			name = strings.Replace(s, "-p=", "", -1)
-		}
-	}
-	if name == "" {
-		return "DEFAULT"
-	}
-	return name
-}
