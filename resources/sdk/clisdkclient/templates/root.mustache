@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"github.com/hashicorp/go-version"
-	"github.com/mypurecloud/platform-client-sdk-cli/build/gc/autopaginate"
 	"github.com/mypurecloud/platform-client-sdk-cli/build/gc/cmd/alternative_formats"
 	"github.com/mypurecloud/platform-client-sdk-cli/build/gc/config"
 	"github.com/mypurecloud/platform-client-sdk-cli/build/gc/logger"
@@ -163,7 +162,6 @@ func init() {
 		rootCmd.PersistentFlags().StringVar(&transform_data.TemplateStr, "transformstr", "", "Provide a Go template string for transforming output data")
 	}
 
-    rootCmd.AddCommand(autopaginate.CmdAutopaginate())
 	rootCmd.AddCommand(versionCmd)
 	{{addCommands}}
 
