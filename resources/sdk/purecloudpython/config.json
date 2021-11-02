@@ -12,13 +12,13 @@
     "extensionsDestination": "${SDK_REPO}/build/PureCloudPlatformClientV2",
     "swagger": {
       "oldSwaggerPath": "${SDK_REPO}/swagger.json",
-      "newSwaggerPath": "https://api.mypurecloud.com/api/v2/docs/swagger",
+      "newSwaggerPath": "swagger.json",
       "saveNewSwaggerPath": "${SDK_REPO}/swagger.json"
     },
     "swaggerCodegen": {
       "resourceLanguage": "purecloudpython",
       "codegenLanguage": "purecloudpython",
-      "jarPath": "${WORKSPACE}/swagger-codegen/modules/swagger-codegen-cli/target/swagger-codegen-cli.jar",
+      "jarPath": "${WORKSPACE}/openapi-generator/modules/openapi-generator-cli/target/openapi-generator-cli.jar",
       "configFile": "${SDK_TEMP}/config.json",
       "extraGeneratorOptions": []
     },

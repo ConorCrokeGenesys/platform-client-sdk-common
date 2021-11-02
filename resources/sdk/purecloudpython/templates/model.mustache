@@ -42,13 +42,13 @@ class {{classname}}(object):
                                   and the value is json key in definition.
         """
         self.swagger_types = {
-            {{#vars}}'{{name}}': '{{{datatype}}}'{{#hasMore}},
-            {{/hasMore}}{{/vars}}
+            {{#vars}}'{{name}}': '{{{datatype}}}'{{^-last}},
+            {{/-last}}{{/vars}}
         }
 
         self.attribute_map = {
-            {{#vars}}'{{name}}': '{{baseName}}'{{#hasMore}},
-            {{/hasMore}}{{/vars}}
+            {{#vars}}'{{name}}': '{{baseName}}'{{^-last}},
+            {{/-last}}{{/vars}}
         }
 
 {{#vars}}
